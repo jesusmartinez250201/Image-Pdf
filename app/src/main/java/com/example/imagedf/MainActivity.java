@@ -16,6 +16,10 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+//TODO: MOdificar para hacer posible ordenar las imagenes
+    //TODO: *SELECTOR DE DIRECTORIOS
+    //TODO: *REMPLAZAR URI POR NOMBRE DE ARCHIVO ESTO OPCIONAL?
+    //TODO: AJUSTAR  EL TAMAÑO DE LAS IMAGENES A LA PAGINA O ROTAR(ESTO SI :C)
     EditText txtNombrePdf;
     Button btnSelectImages;
     Button btnCreatePdf;
