@@ -85,11 +85,13 @@ public class MainActivity extends AppCompatActivity {
         btnCreatePdf.setOnClickListener((view) -> {
             String nombrePdf = txtNombrePdf.getText().toString();
             if (nombrePdf.trim().isEmpty()) {
-                //EL NOMBRE DEL PDF ESTA VACIO
-                txtNombrePdf.setError("El nombre del pdf es obligatorio");
-                txtNombrePdf.requestFocus();
+                Toast.makeText(this, "Ingrese un nombre para el PDF", Toast.LENGTH_SHORT).show();
             } else {
-                createPdf();
+                if (listaImagenes.size() > 0) {
+                    createPdf();
+                } else {
+                    Toast.makeText(this, "No hay imagenes seleccionadas", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -201,6 +203,10 @@ public class MainActivity extends AppCompatActivity {
      * Método para crear el pdf
      */
     private void createPdf() {
+        if (listaImagenes.size() == 0 ) {
+            Toast.makeText(this, "No hay imagenes seleccionadas", Toast.LENGTH_SHORT).show();
+            return;
+        }
         String nombrePdf = txtNombrePdf.getText().toString();
         File directorio = new File(directorioActual);
         if (!directorio.exists()) {
