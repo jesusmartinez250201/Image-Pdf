@@ -12,11 +12,11 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="match_parent"
-        android:src="@mipmap/ic_launcher"/>
+        android:src="@mipmap/ic_subebaja"/>
 
     <TextView
         android:id="@+id/label"
-        android:background="#00FFFF"
+        android:background="#CBDDEC"
         android:layout_width="0dp"
         android:layout_weight="3"
         android:layout_height="match_parent"

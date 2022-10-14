@@ -7,6 +7,16 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <TextView
+        android:background="@drawable/diseno_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:text="Imagenes a PDF"/>
     <EditText
         android:id="@+id/txtNombrePdf"
         android:layout_width="match_parent"
@@ -22,6 +32,10 @@
 
     <Button
         android:id="@+id/btnSelectImages"
+        android:background="#1c3f60"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -30,15 +44,23 @@
 
     <Button
         android:id="@+id/btnCreatePdf"
+        android:background="#1c3f60"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-
         android:gravity="center"
         android:text="Generar pdf" />
 
     <Button
         android:id="@+id/btnCambiarDirectorio"
+        android:background="#1c3f60"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -78,6 +100,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:visibility="invisible"
         android:layout_marginBottom="24dp" />
 
 
