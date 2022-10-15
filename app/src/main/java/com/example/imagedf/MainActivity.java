@@ -3,6 +3,7 @@ package com.example.imagedf;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -14,6 +15,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     //String[] head_list={"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R"};
     private ListAdapter adapter=null;
-    private ArrayList<String> array=new ArrayList<String>(Arrays.asList());
+    private ArrayList<Uri> array=new ArrayList<Uri>(Arrays.asList());
 
 
     //TODO: MOdificar para hacer posible ordenar las imagenes
@@ -138,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
                         for (int i = 0; i < imagenesSeleccionadas; i++) {
                             Uri imagenUri = data.getClipData().getItemAt(i).getUri();
                             listaImagenes.add(imagenUri);
-                            array.add(imagenUri.getPath());
+                            array.add(imagenUri);
 
                             listaRutasImagenes.add(imagenUri.getPath());
                             //Toast.makeText(this, "Ruta: " + imagenUri.getPath(), Toast.LENGTH_SHORT).show();
@@ -165,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                         Uri imagenUri = data.getData();
                         listaImagenes.add(imagenUri);
                         listaRutasImagenes.add(imagenUri.getPath());
-                        array.add(imagenUri.getPath());
+                        array.add(imagenUri);
                         //esto termina de actualizar el listView
                         adapter.notifyDataSetChanged();
                         txtVerRutas.setText(listaRutasImagenes.get(0));
@@ -203,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
      * Método para crear el pdf
      */
     private void createPdf() {
-        if (listaImagenes.size() == 0 ) {
+        if (array.size() == 0 ) {
             Toast.makeText(this, "No hay imagenes seleccionadas", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -224,8 +226,8 @@ public class MainActivity extends AppCompatActivity {
                 Document documento = new Document();
                 PdfWriter.getInstance(documento, ficheroPdf);
                 documento.open();
-                for (int i = 0; i < listaImagenes.size(); i++) {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), listaImagenes.get(i));
+                for (int i = 0; i < array.size(); i++) {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), array.get(i));
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                     Image imagen = Image.getInstance(stream.toByteArray());
@@ -237,11 +239,11 @@ public class MainActivity extends AppCompatActivity {
                 documento.close();
                 Toast.makeText(this, "Pdf creado correctamente", Toast.LENGTH_SHORT).show();
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             } catch (DocumentException e) {
-                e.printStackTrace();
+                Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             } catch (IOException e) {
-                e.printStackTrace();
+                Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -252,13 +254,13 @@ public class MainActivity extends AppCompatActivity {
     private TouchListView.DropListener onDrop=new TouchListView.DropListener() {
         @Override
         public void drop(int from, int to) {
-            String item=adapter.getItem(from);
+            Uri item=adapter.getItem(from);
             adapter.remove(item);
             adapter.insert(item, to);
         }
     };
     //ESto es pa que jale el listview asi que no le muevas
-    class ListAdapter extends ArrayAdapter<String> {
+    class ListAdapter extends ArrayAdapter<Uri> {
         ListAdapter() {
             super(MainActivity.this, R.layout.adapter_layout, array);
         }
@@ -270,7 +272,11 @@ public class MainActivity extends AppCompatActivity {
                 row=inflater.inflate(R.layout.adapter_layout, parent, false);
             }
             TextView label=(TextView)row.findViewById(R.id.label);
-            label.setText(array.get(position));
+            Cursor returnCursor =
+                    getContentResolver().query(array.get(position), null, null, null, null);
+            int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+            returnCursor.moveToFirst();
+            label.setText(returnCursor.getString(nameIndex));
             return(row);
         }
     }
